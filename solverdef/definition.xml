@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SolverDefinition
+  name="actiontester"
+  caption="Action Tester"
+  version="1.0"
+  copyright="charlton"
+  release="2022.01.19"
+  executable="actiontester.exe"
+  iterationtype="time"
+  gridtype="nogrid"
+>
+  <CalculationCondition>
+    <Tab name="UD" caption="Using Dependency">
+      <Item name="udEnable" caption="Enable/Disable [InputConditionWidgetIntegerOption] (udEnable)">
+        <Definition valueType="integer" default="0">
+          <Enumeration value="0" caption="Enable" />
+          <Enumeration value="1" caption="Disable" />
+        </Definition>
+      </Item>
+
+      <Item name="udTimeStep" caption="Time Step [InputConditionWidgetReal] (udTimeStep)">
+        <Definition valueType="real" default="0.1">
+          <!--
+            Dependencies are evaluated in given order
+            if Condition evaluates to true positiveAction is executed
+            else negativeAction is executed
+          -->
+          <Dependency>
+            <Condition type="isEqual" target="udEnable" value="1" />
+            <Action type="setValue" value="-99.9" />
+          </Dependency>
+          <Dependency>
+            <Condition type="isEqual" target="udEnable" value="0" />
+            <!-- <Action type="setValue" value="0.2" /> -->
+            <Action type="enable" />
+          </Dependency>
+        </Definition>
+      </Item>
+
+      <Item name="udIterations" caption="Iterations [InputConditionWidgetInteger] (udIterations)">
+        <Definition conditionType="constant" valueType="integer" option="false" default="10">
+          <Dependency>
+            <Condition type="isEqual" target="udEnable" value="1" />
+            <Action type="setValue" value="99" /> <!-- must be within minimum/maximum -->
+          </Dependency>
+          <Dependency>
+            <Condition type="isEqual" target="udEnable" value="0" />
+            <Action type="enable" />
+            <!-- <Action type="setValue" value="10" /> -->    <!-- must be within minimum/maximum -->
+          </Dependency>
+        </Definition>
+      </Item>
+
+      <Item name="udColor" caption="Color [InputConditionWidgetIntegerOption] (udColor)">
+        <Definition valueType="integer" default="0">
+          <Enumeration value="0" caption="Red" />
+          <Enumeration value="1" caption="Blue" />
+          <Enumeration value="2" caption="Green" />
+          <Dependency>
+            <Condition type="isEqual" target="udEnable" value="1" />
+            <Action type="setValue" value="1" />
+          </Dependency>
+          <Dependency>
+            <Condition type="isEqual" target="udEnable" value="0" />
+            <Action type="enable" />
+            <!-- <Action type="setValue" value="0" /> -->
+          </Dependency>
+        </Definition>
+      </Item>
+
+      <Item name="udTempPath" caption="Temporary File Path [InputConditionWidgetString] (udTempPath)">
+        <Definition conditionType="constant" valueType="string" option="false" default="%TEMP%">
+          <Dependency>
+            <Condition type="isEqual" target="udEnable" value="1" />
+            <Action type="setValue" value="&lt;Not Used&gt;" />
+            <!-- implied disable here (ActionEnable::negativeAction())-->
+          </Dependency>
+          <Dependency>
+            <Condition type="isEqual" target="udEnable" value="0"/>
+            <Action type="enable"/>
+          </Dependency>
+          <Dependency>
+            <Condition type="and">
+              <Condition type="isEqual" target="udEnable" value="0" />
+              <Condition type="isEqual" target="udTempPath" value="&lt;Not Used&gt;"/>
+            </Condition>
+            <Action type="setValue" value="%TEMP%" />
+          </Dependency>
+        </Definition>
+      </Item>
+
+      <Item name="udRealOption" caption="Constant [InputConditionWidgetRealOption] (udRealOption)">
+        <Definition valueType="real" default="0.69314">
+          <Enumeration value="2.09455" caption="Wallis = 2.09455" />
+          <Enumeration value="2.71828" caption="Eulers = 2.71828" />
+          <Enumeration value="0.69314" caption="ln(2) = 0.69314" />
+          <Dependency>
+            <Condition type="isEqual" target="udEnable" value="1" />
+            <Action type="setValue" value="2.71828" />
+            <!-- implied disable here (ActionEnable::negativeAction())-->
+          </Dependency>
+          <Dependency>
+            <Condition type="isEqual" target="udEnable" value="0"/>
+            <Action type="enable"/>
+          </Dependency>
+          <Dependency>
+            <Condition type="and">
+              <Condition type="isEqual" target="udEnable" value="0" />
+              <Condition type="isEqual" target="udRealOption" value="2.71828"/>
+            </Condition>
+            <Action type="setValue" value="0.69314" />
+          </Dependency>
+
+        </Definition>
+      </Item>
+
+    </Tab>
+
+    <!-- check backwards compatibility -->
+    <Tab name="WD" caption="Without Dependency">
+      <Item name="wdEnable" caption="Enable/Disable (wdEnable)">
+        <Definition valueType="integer" default="0">
+          <Enumeration value="0" caption="Enable" />
+          <Enumeration value="1" caption="Disable" />
+        </Definition>
+      </Item>
+      <Item name="wdTimeStep" caption="Time Step (wdTimeStep)">
+        <Definition valueType="real" default="0.3">
+          <Condition type="isEqual" target="wdEnable" value="0" />
+          <Action type="enable" />
+        </Definition>
+      </Item>
+    </Tab>
+
+    <!-- check backwards compatibility -->
+    <Tab name="WDA" caption="Without Dependency or Action">
+      <Item name="wdaEnable" caption="Enable/Disable (wdaEnable)">
+        <Definition valueType="integer" default="0">
+          <Enumeration value="0" caption="Enable" />
+          <Enumeration value="1" caption="Disable" />
+        </Definition>
+      </Item>
+      <Item name="wdaTimeStep" caption="Time Step (wdaTimeStep)">
+        <Definition valueType="real" default="0.5">
+          <Condition type="isEqual" target="wdaEnable" value="0" />
+        </Definition>
+      </Item>
+    </Tab>
+
+    <Tab name="B" caption="Both">
+      <Item name="bEnable" caption="Enable/Disable (bEnable)">
+        <Definition valueType="integer" default="0">
+          <Enumeration value="0" caption="Enable" />
+          <Enumeration value="1" caption="Disable" />
+        </Definition>
+      </Item>
+      <Item name="bTimeStep" caption="Time Step (bTimeStep)">
+        <Definition valueType="real" default="0.75">
+          <Dependency>
+            <Condition type="isEqual" target="bEnable" value="1" />
+            <Action type="setValue" value="-99.9" />
+          </Dependency>
+          <!-- Should this be legal (with Dependency AND without) currently ignored (see)  -->
+          <Condition type="isEqual" target="bEnable" value="0" />
+          <Action type="setValue" value="0.75" />
+          <Action type="enable" />
+        </Definition>
+      </Item>
+    </Tab>
+
+  </CalculationCondition>
+
+  <GridRelatedCondition>
+  </GridRelatedCondition>
+
+</SolverDefinition>
