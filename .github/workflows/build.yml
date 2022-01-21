@@ -104,6 +104,10 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}\${{env.BUILD_DIR}} --config ${{env.BUILD_TYPE}} --target install
 
+    - name: Create artifact
+      uses: actions/upload-artifact@v2
+      path: ${{github.workspace}}\${{env.INSTALL_DIR}}
+
     # - name: Prepare solver package directories
     #   shell: pwsh
     #   run: |
